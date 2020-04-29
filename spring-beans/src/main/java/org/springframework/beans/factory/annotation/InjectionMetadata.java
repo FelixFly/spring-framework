@@ -127,6 +127,7 @@ public class InjectionMetadata {
 				if (logger.isTraceEnabled()) {
 					logger.trace("Processing injected element of bean '" + beanName + "': " + element);
 				}
+				// 循环每个属性进行注入
 				element.inject(target, beanName, pvs);
 			}
 		}
@@ -232,17 +233,19 @@ public class InjectionMetadata {
 		 */
 		protected void inject(Object target, @Nullable String requestingBeanName, @Nullable PropertyValues pvs)
 				throws Throwable {
-
+			// 属性注入
 			if (this.isField) {
 				Field field = (Field) this.member;
 				ReflectionUtils.makeAccessible(field);
 				field.set(target, getResourceToInject(target, requestingBeanName));
 			}
 			else {
+				// 检查属性是否跳过
 				if (checkPropertySkipping(pvs)) {
 					return;
 				}
 				try {
+					// 方法参数注入
 					Method method = (Method) this.member;
 					ReflectionUtils.makeAccessible(method);
 					method.invoke(target, getResourceToInject(target, requestingBeanName));
