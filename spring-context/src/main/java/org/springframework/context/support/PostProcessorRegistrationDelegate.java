@@ -199,9 +199,13 @@ final class PostProcessorRegistrationDelegate {
 
 		// Separate between BeanPostProcessors that implement PriorityOrdered,
 		// Ordered, and the rest.
+		// PriorityOrder BeanPostProcessor 注册优先级(第一)
 		List<BeanPostProcessor> priorityOrderedPostProcessors = new ArrayList<>();
+		// 内部的MergedBeanDefinitionPostProcessor 最后注册(第四),内部的顺序是按照PriorityOrder -> Order -> 普通的
 		List<BeanPostProcessor> internalPostProcessors = new ArrayList<>();
+		// Order BeanPostProcessor 注册优先级(第二)
 		List<String> orderedPostProcessorNames = new ArrayList<>();
+		// 普通的 BeanPostProcessor 注册优先级(第三)
 		List<String> nonOrderedPostProcessorNames = new ArrayList<>();
 		for (String ppName : postProcessorNames) {
 			if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
