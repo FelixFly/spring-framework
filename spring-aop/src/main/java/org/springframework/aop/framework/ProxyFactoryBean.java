@@ -247,7 +247,9 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	@Override
 	@Nullable
 	public Object getObject() throws BeansException {
+		// 初始化通知器链
 		initializeAdvisorChain();
+		// 根据是否单例创建动态代理
 		if (isSingleton()) {
 			return getSingletonInstance();
 		}
@@ -505,6 +507,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 	 * Add all global interceptors and pointcuts.
 	 */
 	private void addGlobalAdvisors(ListableBeanFactory beanFactory, String prefix) {
+		// Advisor 以及 Interceptor 接口，通配符*之前的执行匹配
 		String[] globalAdvisorNames =
 				BeanFactoryUtils.beanNamesForTypeIncludingAncestors(beanFactory, Advisor.class);
 		String[] globalInterceptorNames =
@@ -521,6 +524,7 @@ public class ProxyFactoryBean extends ProxyCreatorSupport
 					beans.add(beanFactory.getBean(name));
 				}
 			}
+			// 进行排序
 			AnnotationAwareOrderComparator.sort(beans);
 			for (Object bean : beans) {
 				addAdvisorOnChainCreation(bean);

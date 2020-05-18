@@ -45,6 +45,9 @@ public class TransactionManagementConfigurationSelector extends AdviceModeImport
 	 */
 	@Override
 	protected String[] selectImports(AdviceMode adviceMode) {
+		// ProxyTransactionManagementConfiguration 代理的事务管理配置
+		// AspectJJtaTransactionManagementConfiguration JTA 的事务管理配置
+		// AspectJTransactionManagementConfiguration
 		switch (adviceMode) {
 			case PROXY:
 				return new String[] {AutoProxyRegistrar.class.getName(),
