@@ -567,6 +567,7 @@ class ConfigurationClassParser {
 					if (candidate.isAssignable(ImportSelector.class)) {
 						// Candidate class is an ImportSelector -> delegate to it to determine imports
 						Class<?> candidateClass = candidate.loadClass();
+						// Aware的回调
 						ImportSelector selector = ParserStrategyUtils.instantiateClass(candidateClass, ImportSelector.class,
 								this.environment, this.resourceLoader, this.registry);
 						Predicate<String> selectorFilter = selector.getExclusionFilter();
@@ -577,6 +578,7 @@ class ConfigurationClassParser {
 							this.deferredImportSelectorHandler.handle(configClass, (DeferredImportSelector) selector);
 						}
 						else {
+							// ImportSelector#selectImports的处理
 							String[] importClassNames = selector.selectImports(currentSourceClass.getMetadata());
 							Collection<SourceClass> importSourceClasses = asSourceClasses(importClassNames, exclusionFilter);
 							processImports(configClass, currentSourceClass, importSourceClasses, exclusionFilter, false);

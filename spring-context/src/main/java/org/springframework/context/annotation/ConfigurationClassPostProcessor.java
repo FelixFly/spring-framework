@@ -232,7 +232,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					"postProcessBeanFactory already called on this post-processor against " + registry);
 		}
 		this.registriesPostProcessed.add(registryId);
-
+		// 处理配置Bean信息
 		processConfigBeanDefinitions(registry);
 	}
 
@@ -283,6 +283,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			return;
 		}
 
+		// 配置类的排序
 		// Sort by previously determined @Order value, if applicable
 		configCandidates.sort((bd1, bd2) -> {
 			int i1 = ConfigurationClassUtils.getOrder(bd1.getBeanDefinition());
@@ -308,6 +309,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 			this.environment = new StandardEnvironment();
 		}
 
+		// 解析每个@Configuration注解的配置类
 		// Parse each @Configuration class
 		ConfigurationClassParser parser = new ConfigurationClassParser(
 				this.metadataReaderFactory, this.problemReporter, this.environment,
