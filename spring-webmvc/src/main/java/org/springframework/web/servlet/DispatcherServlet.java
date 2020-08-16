@@ -908,6 +908,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 */
 	@Override
 	protected void doService(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		// 记录日志
 		logRequest(request);
 
 		// Keep a snapshot of the request attributes in case of an include,
@@ -1013,6 +1014,8 @@ public class DispatcherServlet extends FrameworkServlet {
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
+				// HandlerMapping 方法跟URL的关系
+				// HandlerInterceptor 构建成的HandlerInterceptorChain链
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null) {
 					noHandlerFound(processedRequest, response);
@@ -1020,6 +1023,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				// Determine handler adapter for the current request.
+				// HandlerAdapter 方法的适配
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
@@ -1032,11 +1036,13 @@ public class DispatcherServlet extends FrameworkServlet {
 					}
 				}
 
+				// HandlerInterceptor#preHandle 前置处理
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
 
 				// Actually invoke the handler.
+				// 执行目标方法
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
 				if (asyncManager.isConcurrentHandlingStarted()) {
@@ -1044,6 +1050,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				applyDefaultViewName(processedRequest, mv);
+				// HandlerInterceptor#postHandle 后置处理
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {
@@ -1131,6 +1138,7 @@ public class DispatcherServlet extends FrameworkServlet {
 			return;
 		}
 
+		// HandlerInterceptor#afterCompletion 后置处理
 		if (mappedHandler != null) {
 			// Exception (if any) is already handled..
 			mappedHandler.triggerAfterCompletion(request, response, null);
